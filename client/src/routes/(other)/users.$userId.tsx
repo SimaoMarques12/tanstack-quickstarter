@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { NotFound } from 'src/components/NotFound'
 import { UserErrorComponent } from 'src/components/UserError'
 
-export const Route = createFileRoute('/users/$userId')({
+export const Route = createFileRoute('/(other)/users/$userId')({
   loader: async ({ params: { userId } }) => {
     try {
       const res = await fetch('/api/users/' + userId)
