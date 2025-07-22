@@ -4,6 +4,7 @@ import {
   Link,
   Scripts,
   createRootRoute,
+  useNavigate,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
@@ -12,6 +13,9 @@ import { NotFound } from "@/components/NotFound";
 import appCss from "@/styles/app.css?url";
 import { seo } from "@/utils/seo";
 import { ThemeProvider } from "@/components/theme-provider";
+import { signIn, signOut, useSession } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -64,6 +68,11 @@ export const Route = createRootRoute({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const { data: session } = useSession();
+  console.log("session:", session);
+
+  const navigate = useNavigate();
+
   return (
     <ThemeProvider>
       <html>
@@ -122,6 +131,25 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             >
               This Route Does Not Exist
             </Link>
+            {!session && <Link to="/sign-in"></Link>}
+            {session && (
+              <Button
+                onClick={() =>
+                  signOut({
+                    fetchOptions: {
+                      onError: (ctx) => {
+                        toast.error(ctx.error.message);
+                      },
+                      onSuccess: async () => {
+                        navigate({ to: "/protected" });
+                      },
+                    },
+                  })
+                }
+              >
+                Sign Out
+              </Button>
+            )}
           </div>
           <hr />
           {children}

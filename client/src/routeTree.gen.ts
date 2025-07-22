@@ -20,6 +20,8 @@ import { Route as otherRedirectRouteImport } from './routes/(other)/redirect'
 import { Route as otherPostsRouteImport } from './routes/(other)/posts'
 import { Route as otherDeferredRouteImport } from './routes/(other)/deferred'
 import { Route as otherPathlessLayoutRouteImport } from './routes/(other)/_pathlessLayout'
+import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
+import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as otherUsersIndexRouteImport } from './routes/(other)/users.index'
 import { Route as otherPostsIndexRouteImport } from './routes/(other)/posts.index'
 import { Route as otherUsersUserIdRouteImport } from './routes/(other)/users.$userId'
@@ -76,6 +78,16 @@ const otherDeferredRoute = otherDeferredRouteImport.update({
 const otherPathlessLayoutRoute = otherPathlessLayoutRouteImport.update({
   id: '/_pathlessLayout',
   getParentRoute: () => otherRoute,
+} as any)
+const authSignUpRoute = authSignUpRouteImport.update({
+  id: '/(auth)/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authSignInRoute = authSignInRouteImport.update({
+  id: '/(auth)/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const otherUsersIndexRoute = otherUsersIndexRouteImport.update({
   id: '/',
@@ -138,6 +150,8 @@ const ApiUsersUserIdServerRoute = ApiUsersUserIdServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof otherPathlessLayoutRouteWithChildren
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
   '/deferred': typeof otherDeferredRoute
   '/posts': typeof otherPostsRouteWithChildren
   '/redirect': typeof otherRedirectRoute
@@ -153,6 +167,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof otherPathlessLayoutRouteWithChildren
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
   '/deferred': typeof otherDeferredRoute
   '/redirect': typeof otherRedirectRoute
   '/protected': typeof AuthedProtectedRoute
@@ -168,6 +184,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
+  '/(auth)/sign-in': typeof authSignInRoute
+  '/(auth)/sign-up': typeof authSignUpRoute
   '/(other)': typeof otherRouteWithChildren
   '/(other)/_pathlessLayout': typeof otherPathlessLayoutRouteWithChildren
   '/(other)/deferred': typeof otherDeferredRoute
@@ -188,6 +206,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/sign-in'
+    | '/sign-up'
     | '/deferred'
     | '/posts'
     | '/redirect'
@@ -203,6 +223,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/sign-in'
+    | '/sign-up'
     | '/deferred'
     | '/redirect'
     | '/protected'
@@ -217,6 +239,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authed'
+    | '/(auth)/sign-in'
+    | '/(auth)/sign-up'
     | '/(other)'
     | '/(other)/_pathlessLayout'
     | '/(other)/deferred'
@@ -237,6 +261,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthedRoute: typeof AuthedRouteWithChildren
+  authSignInRoute: typeof authSignInRoute
+  authSignUpRoute: typeof authSignUpRoute
   otherRoute: typeof otherRouteWithChildren
 }
 export interface FileServerRoutesByFullPath {
@@ -336,6 +362,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof otherPathlessLayoutRouteImport
       parentRoute: typeof otherRoute
+    }
+    '/(auth)/sign-up': {
+      id: '/(auth)/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authSignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-in': {
+      id: '/(auth)/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(other)/users/': {
       id: '/(other)/users/'
@@ -525,6 +565,8 @@ const ApiUsersServerRouteWithChildren = ApiUsersServerRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
+  authSignInRoute: authSignInRoute,
+  authSignUpRoute: authSignUpRoute,
   otherRoute: otherRouteWithChildren,
 }
 export const routeTree = rootRouteImport
